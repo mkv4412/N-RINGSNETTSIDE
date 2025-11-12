@@ -10,11 +10,16 @@
     <div class="container">
         <!-- Cooking Pan Header -->
         <div class="cooking-header">
-            <div class="cooking-pan">
-                <img src="../media/cookingpanemoji.png" alt="Cooking Pan">
+            <div class="cooking-pan-container">
+                <div class="cooking-pan" id="cookingPan">
+                    <img src="../media/cookingpanemoji.png" alt="Cooking Pan">
+                    <div class="pan-contents" id="panContents">
+                        <!-- Dropped food items will appear here -->
+                    </div>
+                </div>
             </div>
             <h1 class="kitchen-title">Digital Calorie Kitchen</h1>
-            <p class="kitchen-subtitle">Build your perfect meal</p>
+            <p class="kitchen-subtitle">Drag food into the pan to cook!</p>
         </div>
 
         <!-- Food Counter -->
@@ -27,20 +32,103 @@
             </div>
 
             <!-- Horizontal Scrolling Food Menu -->
-            <div class="food-scroll-menu" id="foodScrollMenu">
-                <!-- Food items will be populated by JavaScript -->
-            </div>
-
-            <div class="food-items" id="foodItems">
-                <!-- Food items will be populated by JavaScript -->
+            <div class="food-menu-wrapper">
+                <button class="scroll-button scroll-left" id="scrollLeft">‹</button>
+                <div class="food-scroll-menu" id="foodScrollMenu">
+                    <!-- Food items will be populated by JavaScript -->
+                </div>
+                <button class="scroll-button scroll-right" id="scrollRight">›</button>
             </div>
         </div>
 
         <!-- Selected Items -->
         <div class="selected-items">
-            <h3>📋 Your Selected Items</h3>
+            <h3>📋 Din Måltidsrapport</h3>
             <div id="selectedItems">
-                <p style="color: #666; font-style: italic;">No items selected yet. Start building your meal!</p>
+                <p style="color: #666; font-style: italic;">Ingen varer valgt ennå. Start å bygge måltidet ditt!</p>
+            </div>
+            
+            <!-- Nutrition Report -->
+            <div id="nutritionReport" style="display: none;">
+                <h4 style="color: #333; margin-top: 20px; margin-bottom: 15px;">🍽️ Komplett Næringsrapport</h4>
+                <div class="nutrition-summary">
+                    <div class="nutrition-grid">
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Total Kalorier:</span>
+                            <span class="nutrition-value" id="totalKcal">0 kcal</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Protein:</span>
+                            <span class="nutrition-value" id="totalProtein">0 g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Fett:</span>
+                            <span class="nutrition-value" id="totalFat">0 g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Karbohydrater:</span>
+                            <span class="nutrition-value" id="totalCarbs">0 g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Kolesterol:</span>
+                            <span class="nutrition-value" id="totalCholesterol">0 mg</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Kollagen:</span>
+                            <span class="nutrition-value" id="totalCollagen">0 g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Vitamin C:</span>
+                            <span class="nutrition-value" id="totalVitaminC">0 mg</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Kalsium:</span>
+                            <span class="nutrition-value" id="totalCalcium">0 mg</span>
+                        </div>
+                    </div>
+                    
+                    <div class="fat-type-breakdown" style="margin-top: 15px;">
+                        <h5 style="color: #555; margin-bottom: 10px;">Fetttype Analyse:</h5>
+                        <div id="fatTypeBreakdown">
+                            <div class="fat-type healthy">Sunt fett: <span id="healthyFat">0 g</span></div>
+                            <div class="fat-type mixed">Blandet fett: <span id="mixedFat">0 g</span></div>
+                            <div class="fat-type unhealthy">Usunt fett: <span id="unhealthyFat">0 g</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Button -->
+    <button class="settings-button" id="settingsButton">⚙️</button>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h3 class="settings-title">⚙️ Porsjonsinnstillinger</h3>
+                <button class="close-settings" id="closeSettings">✕</button>
+            </div>
+            
+            <div class="portion-multiplier">
+                <h4>📏 Globale Porsjoner</h4>
+                <div class="multiplier-controls">
+                    <button class="multiplier-button" id="decreaseMultiplier">-</button>
+                    <span class="multiplier-display" id="multiplierDisplay">1.0x</span>
+                    <button class="multiplier-button" id="increaseMultiplier">+</button>
+                </div>
+                <div class="portion-info">
+                    Standard multiplikator for nye ingredienser
+                </div>
+                <button class="reset-button" id="resetMultiplier">Tilbakestill alle</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h4>🥘 Individuelle Ingredienser:</h4>
+                <div id="individualPortions">
+                    <p style="color: #666; font-style: italic;">Ingen ingredienser valgt ennå</p>
+                </div>
             </div>
         </div>
     </div>
@@ -49,6 +137,9 @@
     <script>
         let selectedFoods = [];
         let totalCalories = 0;
+        let panFoods = [];
+        let portionMultiplier = 1.0;
+        let individualMultipliers = {}; // Store multiplier per food item
 
         // Function to get category emoji
         function getCategoryEmoji(category) {
@@ -64,7 +155,7 @@
             return emojis[category] || '🍽️';
         }
 
-        // Function to display horizontal scrolling food menu
+        // Function to display horizontal scrolling food menu with drag functionality
         function displayFoodScrollMenu() {
             const scrollMenuContainer = document.getElementById('foodScrollMenu');
             scrollMenuContainer.innerHTML = '';
@@ -72,73 +163,232 @@
             foods.forEach((food, index) => {
                 const scrollItem = document.createElement('div');
                 scrollItem.className = 'food-scroll-item';
+                scrollItem.draggable = true;
+                scrollItem.dataset.foodIndex = index;
                 scrollItem.innerHTML = `
                     <span class="food-scroll-emoji">${getCategoryEmoji(food.category)}</span>
                     <div class="food-scroll-name">${food.name}</div>
                     <div class="food-scroll-calories">${food.kcal} kcal</div>
-                    <button class="food-scroll-add" onclick="addFood(${index})">+</button>
                 `;
+                
+                // Add drag event listeners
+                scrollItem.addEventListener('dragstart', handleDragStart);
+                scrollItem.addEventListener('dragend', handleDragEnd);
+                
                 scrollMenuContainer.appendChild(scrollItem);
             });
         }
 
-        // Function to display food items
-        function displayFoodItems() {
-            const foodItemsContainer = document.getElementById('foodItems');
-            foodItemsContainer.innerHTML = '';
+        // Drag and Drop Event Handlers
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.foodIndex);
+            e.target.classList.add('dragging');
+        }
 
-            foods.forEach((food, index) => {
-                const foodItem = document.createElement('div');
-                foodItem.className = 'food-item';
-                foodItem.innerHTML = `
-                    <div class="food-image-placeholder">
-                        ${getCategoryEmoji(food.category)}
-                    </div>
-                    <div class="food-name">${food.name}</div>
-                    <div class="food-calories">${food.kcal} kcal</div>
-                    <div class="food-portion">${food.portion}</div>
-                    <button class="add-button" onclick="addFood(${index})">+ Add</button>
-                `;
-                foodItemsContainer.appendChild(foodItem);
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const foodIndex = e.dataTransfer.getData('text/plain');
+            const food = foods[parseInt(foodIndex)];
+            
+            // Add food to pan
+            addFoodToPan(food);
+        }
+
+        // Function to add food to pan with portion multiplier
+        function addFoodToPan(food) {
+            const foodId = food.name;
+            // Use individual multiplier if exists, otherwise use global
+            const multiplier = individualMultipliers[foodId] || portionMultiplier;
+            const adjustedFood = adjustFoodPortion(food, multiplier);
+            
+            // Store the original food reference and multiplier
+            adjustedFood.originalName = food.name;
+            adjustedFood.currentMultiplier = multiplier;
+            
+            panFoods.push(adjustedFood);
+            selectedFoods.push(adjustedFood);
+            totalCalories += adjustedFood.kcal;
+            
+            // Initialize individual multiplier if not exists
+            if (!individualMultipliers[foodId]) {
+                individualMultipliers[foodId] = multiplier;
+            }
+            
+            updatePanContents();
+            updateSelectedItems();
+            updateTotalCalories();
+            updateIndividualPortions();
+        }
+
+        // Function to adjust food portion based on multiplier
+        function adjustFoodPortion(food, multiplier) {
+            return {
+                ...food,
+                kcal: Math.round(food.kcal * multiplier),
+                protein_g: Math.round((food.protein_g * multiplier) * 10) / 10,
+                fat_g: Math.round((food.fat_g * multiplier) * 10) / 10,
+                carbs_g: Math.round((food.carbs_g * multiplier) * 10) / 10,
+                cholesterol_mg: Math.round((food.cholesterol_mg * multiplier) * 10) / 10,
+                collagen_g: Math.round((food.collagen_g * multiplier) * 10) / 10,
+                vitaminC_mg: Math.round((food.vitaminC_mg * multiplier) * 10) / 10,
+                calcium_mg: Math.round((food.calcium_mg * multiplier) * 10) / 10,
+                portion: updatePortionText(food.portion, multiplier)
+            };
+        }
+
+        // Function to update portion text
+        function updatePortionText(originalPortion, multiplier) {
+            if (multiplier === 1.0) return originalPortion;
+            return `${originalPortion} (${multiplier}x)`;
+        }
+
+        // Function to update pan contents
+        function updatePanContents() {
+            const panContents = document.getElementById('panContents');
+            panContents.innerHTML = '';
+            
+            panFoods.forEach((food) => {
+                const foodEmoji = document.createElement('span');
+                foodEmoji.className = 'pan-food-item';
+                foodEmoji.textContent = getCategoryEmoji(food.category);
+                panContents.appendChild(foodEmoji);
             });
         }
 
-        // Function to add food to selection
-        function addFood(index) {
-            const food = foods[index];
-            selectedFoods.push(food);
-            totalCalories += food.kcal;
-            updateSelectedItems();
-            updateTotalCalories();
+        // Scroll button functionality
+        function setupScrollButtons() {
+            const scrollMenu = document.getElementById('foodScrollMenu');
+            const scrollLeft = document.getElementById('scrollLeft');
+            const scrollRight = document.getElementById('scrollRight');
+            
+            scrollLeft.addEventListener('click', () => {
+                scrollMenu.scrollBy({ left: -200, behavior: 'smooth' });
+            });
+            
+            scrollRight.addEventListener('click', () => {
+                scrollMenu.scrollBy({ left: 200, behavior: 'smooth' });
+            });
         }
+
+
 
         // Function to remove food from selection
         function removeFood(index) {
             const removedFood = selectedFoods.splice(index, 1)[0];
             totalCalories -= removedFood.kcal;
+            
+            // Also remove from pan if it exists there
+            const panIndex = panFoods.findIndex(food => food.name === removedFood.name);
+            if (panIndex !== -1) {
+                panFoods.splice(panIndex, 1);
+                updatePanContents();
+            }
+            
+            // Check if this was the last instance of this food
+            const remainingCount = selectedFoods.filter(f => f.originalName === removedFood.originalName).length;
+            if (remainingCount === 0) {
+                delete individualMultipliers[removedFood.originalName];
+            }
+            
             updateSelectedItems();
             updateTotalCalories();
+            updateIndividualPortions();
         }
 
         // Function to update selected items display
         function updateSelectedItems() {
             const selectedItemsContainer = document.getElementById('selectedItems');
+            const nutritionReport = document.getElementById('nutritionReport');
             
             if (selectedFoods.length === 0) {
-                selectedItemsContainer.innerHTML = '<p style="color: #666; font-style: italic;">No items selected yet. Start building your meal!</p>';
+                selectedItemsContainer.innerHTML = '<p style="color: #666; font-style: italic;">Ingen varer valgt ennå. Start å bygge måltidet ditt!</p>';
+                nutritionReport.style.display = 'none';
                 return;
             }
 
+            // Show selected items
             selectedItemsContainer.innerHTML = '';
             selectedFoods.forEach((food, index) => {
                 const item = document.createElement('div');
                 item.className = 'selected-item';
                 item.innerHTML = `
                     <span>${getCategoryEmoji(food.category)} ${food.name} - ${food.kcal} kcal</span>
-                    <button class="remove-button" onclick="removeFood(${index})">Remove</button>
+                    <button class="remove-button" onclick="removeFood(${index})">Fjern</button>
                 `;
                 selectedItemsContainer.appendChild(item);
             });
+
+            // Show and update nutrition report
+            nutritionReport.style.display = 'block';
+            updateNutritionReport();
+        }
+
+        // Function to calculate and update nutrition report
+        function updateNutritionReport() {
+            let totals = {
+                kcal: 0,
+                protein: 0,
+                fat: 0,
+                carbs: 0,
+                cholesterol: 0,
+                collagen: 0,
+                vitaminC: 0,
+                calcium: 0,
+                healthyFat: 0,
+                mixedFat: 0,
+                unhealthyFat: 0
+            };
+
+            // Calculate totals
+            selectedFoods.forEach(food => {
+                totals.kcal += food.kcal;
+                totals.protein += food.protein_g;
+                totals.fat += food.fat_g;
+                totals.carbs += food.carbs_g;
+                totals.cholesterol += food.cholesterol_mg;
+                totals.collagen += food.collagen_g;
+                totals.vitaminC += food.vitaminC_mg;
+                totals.calcium += food.calcium_mg;
+
+                // Fat type breakdown
+                if (food.fat_type === 'healthy') {
+                    totals.healthyFat += food.fat_g;
+                } else if (food.fat_type === 'mixed') {
+                    totals.mixedFat += food.fat_g;
+                } else if (food.fat_type === 'unhealthy') {
+                    totals.unhealthyFat += food.fat_g;
+                }
+            });
+
+            // Update the display
+            document.getElementById('totalKcal').textContent = `${totals.kcal} kcal`;
+            document.getElementById('totalProtein').textContent = `${totals.protein.toFixed(1)} g`;
+            document.getElementById('totalFat').textContent = `${totals.fat.toFixed(1)} g`;
+            document.getElementById('totalCarbs').textContent = `${totals.carbs.toFixed(1)} g`;
+            document.getElementById('totalCholesterol').textContent = `${totals.cholesterol.toFixed(1)} mg`;
+            document.getElementById('totalCollagen').textContent = `${totals.collagen.toFixed(1)} g`;
+            document.getElementById('totalVitaminC').textContent = `${totals.vitaminC.toFixed(1)} mg`;
+            document.getElementById('totalCalcium').textContent = `${totals.calcium.toFixed(1)} mg`;
+
+            // Fat type breakdown
+            document.getElementById('healthyFat').textContent = `${totals.healthyFat.toFixed(1)} g`;
+            document.getElementById('mixedFat').textContent = `${totals.mixedFat.toFixed(1)} g`;
+            document.getElementById('unhealthyFat').textContent = `${totals.unhealthyFat.toFixed(1)} g`;
         }
 
         // Function to update total calories
@@ -146,9 +396,184 @@
             document.getElementById('totalCalories').textContent = totalCalories;
         }
 
+        // Setup drag and drop for cooking pan
+        function setupDragAndDrop() {
+            const cookingPan = document.getElementById('cookingPan');
+            
+            cookingPan.addEventListener('dragover', handleDragOver);
+            cookingPan.addEventListener('dragleave', handleDragLeave);
+            cookingPan.addEventListener('drop', handleDrop);
+        }
+
+        // Settings functionality
+        function setupSettings() {
+            const settingsButton = document.getElementById('settingsButton');
+            const settingsModal = document.getElementById('settingsModal');
+            const closeSettings = document.getElementById('closeSettings');
+            const decreaseMultiplier = document.getElementById('decreaseMultiplier');
+            const increaseMultiplier = document.getElementById('increaseMultiplier');
+            const resetMultiplier = document.getElementById('resetMultiplier');
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+
+            // Open settings
+            settingsButton.addEventListener('click', () => {
+                settingsModal.style.display = 'flex';
+                updateIndividualPortions();
+            });
+
+            // Close settings
+            closeSettings.addEventListener('click', () => {
+                settingsModal.style.display = 'none';
+            });
+
+            // Close on backdrop click
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    settingsModal.style.display = 'none';
+                }
+            });
+
+            // Decrease multiplier
+            decreaseMultiplier.addEventListener('click', () => {
+                if (portionMultiplier > 0.1) {
+                    portionMultiplier = Math.round((portionMultiplier - 0.1) * 10) / 10;
+                    updateMultiplierDisplay();
+                    updateMultiplierEffect();
+                }
+            });
+
+            // Increase multiplier
+            increaseMultiplier.addEventListener('click', () => {
+                if (portionMultiplier < 5.0) {
+                    portionMultiplier = Math.round((portionMultiplier + 0.1) * 10) / 10;
+                    updateMultiplierDisplay();
+                    updateMultiplierEffect();
+                }
+            });
+
+            // Reset multiplier
+            resetMultiplier.addEventListener('click', () => {
+                portionMultiplier = 1.0;
+                // Reset all individual multipliers to 1.0
+                Object.keys(individualMultipliers).forEach(key => {
+                    individualMultipliers[key] = 1.0;
+                });
+                recalculateSelectedFoods();
+                updateMultiplierDisplay();
+                updateIndividualPortions();
+            });
+
+            // Initialize display
+            updateMultiplierDisplay();
+        }
+
+        function updateMultiplierDisplay() {
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+            multiplierDisplay.textContent = `${portionMultiplier.toFixed(1)}x`;
+        }
+
+        function updateIndividualPortions() {
+            const container = document.getElementById('individualPortions');
+            
+            if (Object.keys(individualMultipliers).length === 0) {
+                container.innerHTML = '<p style="color: #666; font-style: italic;">Ingen ingredienser valgt ennå</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            
+            Object.keys(individualMultipliers).forEach(foodName => {
+                const originalFood = foods.find(f => f.name === foodName);
+                if (!originalFood) return;
+                
+                const multiplier = individualMultipliers[foodName];
+                const adjustedFood = adjustFoodPortion(originalFood, multiplier);
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'ingredient-item';
+                itemDiv.innerHTML = `
+                    <div class="ingredient-info">
+                        <div class="ingredient-name">${getCategoryEmoji(originalFood.category)} ${foodName}</div>
+                        <div class="ingredient-stats">${adjustedFood.kcal} kcal, ${adjustedFood.protein_g}g protein</div>
+                    </div>
+                    <div class="ingredient-controls">
+                        <button class="ingredient-multiplier-btn" onclick="adjustIndividualPortion('${foodName}', -0.1)">-</button>
+                        <span class="ingredient-multiplier-display">${multiplier.toFixed(1)}x</span>
+                        <button class="ingredient-multiplier-btn" onclick="adjustIndividualPortion('${foodName}', 0.1)">+</button>
+                        <button class="remove-ingredient-btn" onclick="removeAllOfIngredient('${foodName}')">✕</button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        function adjustIndividualPortion(foodName, change) {
+            if (!individualMultipliers[foodName]) return;
+            
+            const newMultiplier = Math.max(0.1, Math.min(5.0, 
+                Math.round((individualMultipliers[foodName] + change) * 10) / 10
+            ));
+            
+            individualMultipliers[foodName] = newMultiplier;
+            
+            // Update all instances of this food in selected foods
+            recalculateSelectedFoods();
+            updateIndividualPortions();
+        }
+
+        function removeAllOfIngredient(foodName) {
+            // Remove all instances of this food
+            selectedFoods = selectedFoods.filter(food => food.originalName !== foodName);
+            panFoods = panFoods.filter(food => food.originalName !== foodName);
+            
+            // Remove from individual multipliers
+            delete individualMultipliers[foodName];
+            
+            // Recalculate totals
+            recalculateTotalCalories();
+            updateSelectedItems();
+            updatePanContents();
+            updateIndividualPortions();
+        }
+
+        function recalculateSelectedFoods() {
+            // Update all selected foods with new multipliers
+            selectedFoods = selectedFoods.map(food => {
+                const originalFood = foods.find(f => f.name === food.originalName);
+                const multiplier = individualMultipliers[food.originalName] || 1.0;
+                const adjustedFood = adjustFoodPortion(originalFood, multiplier);
+                adjustedFood.originalName = food.originalName;
+                adjustedFood.currentMultiplier = multiplier;
+                return adjustedFood;
+            });
+            
+            // Update pan foods
+            panFoods = panFoods.map(food => {
+                const originalFood = foods.find(f => f.name === food.originalName);
+                const multiplier = individualMultipliers[food.originalName] || 1.0;
+                const adjustedFood = adjustFoodPortion(originalFood, multiplier);
+                adjustedFood.originalName = food.originalName;
+                adjustedFood.currentMultiplier = multiplier;
+                return adjustedFood;
+            });
+            
+            recalculateTotalCalories();
+            updateSelectedItems();
+            updatePanContents();
+        }
+
+        function recalculateTotalCalories() {
+            totalCalories = selectedFoods.reduce((sum, food) => sum + food.kcal, 0);
+            updateTotalCalories();
+        }
+
         // Initialize the app
-        displayFoodScrollMenu();
-        displayFoodItems();
+        document.addEventListener('DOMContentLoaded', () => {
+            displayFoodScrollMenu();
+            setupScrollButtons();
+            setupDragAndDrop();
+            setupSettings();
+        });
     </script>
 </body>
 </html>

@@ -22,11 +22,20 @@ body {
     margin-bottom: 30px;
 }
 
-.cooking-pan {
-    width: 120px;
-    height: 120px;
+.cooking-pan-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
     margin: 0 auto 20px;
+}
+
+.cooking-pan {
+    width: 200px;
+    height: 200px;
     animation: float 3s ease-in-out infinite;
+    position: relative;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
 .cooking-pan img {
@@ -35,9 +44,43 @@ body {
     object-fit: contain;
 }
 
+.cooking-pan.drag-over {
+    transform: scale(1.1);
+    animation: none;
+    box-shadow: 0 0 30px rgba(255, 193, 7, 0.8);
+}
+
+.pan-contents {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+}
+
+.pan-food-item {
+    font-size: 1.2rem;
+    animation: sizzle 0.5s ease-in;
+    z-index: 10;
+}
+
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
+}
+
+@keyframes sizzle {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+    100% { transform: scale(1) rotate(360deg); opacity: 1; }
 }
 
 .kitchen-title {
@@ -87,18 +130,54 @@ body {
 }
 
 /* Horizontal Food Menu */
+.food-menu-wrapper {
+    position: relative;
+    margin: 20px 0;
+}
+
 .food-scroll-menu {
     display: flex;
     overflow-x: auto;
     gap: 15px;
     padding: 20px 0;
-    margin: 20px 0;
+    scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
 .food-scroll-menu::-webkit-scrollbar {
-    display: inside;
+    display: none;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.scroll-button:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-left {
+    left: -10px;
+}
+
+.scroll-right {
+    right: -10px;
 }
 
 .food-scroll-item {
@@ -110,14 +189,30 @@ body {
     text-align: center;
     border: 2px solid transparent;
     transition: all 0.3s ease;
-    cursor: pointer;
+    cursor: grab;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    user-select: none;
 }
 
 .food-scroll-item:hover {
     border-color: #007bff;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.food-scroll-item.dragging {
+    cursor: grabbing;
+    opacity: 0.5;
+    transform: rotate(5deg) scale(0.9);
+    z-index: 1000;
+}
+
+.food-scroll-item[draggable="true"] {
+    cursor: grab;
+}
+
+.food-scroll-item[draggable="true"]:active {
+    cursor: grabbing;
 }
 
 .food-scroll-emoji {
@@ -256,6 +351,285 @@ body {
     border-radius: 15px;
     cursor: pointer;
     font-size: 0.8rem;
+}
+
+/* Nutrition Report Styling */
+.nutrition-summary {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    border: 2px solid #e9ecef;
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.nutrition-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.nutrition-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.nutrition-value {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 0.9rem;
+}
+
+.fat-type-breakdown {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.fat-type {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.fat-type.healthy {
+    color: #28a745;
+}
+
+.fat-type.mixed {
+    color: #ffc107;
+}
+
+.fat-type.unhealthy {
+    color: #dc3545;
+}
+
+/* Settings Panel */
+.settings-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.settings-button:hover {
+    background: white;
+    transform: rotate(90deg);
+}
+
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings-panel {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
+.close-settings {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+}
+
+.close-settings:hover {
+    color: #333;
+}
+
+.portion-multiplier {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.portion-multiplier h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.multiplier-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.multiplier-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.multiplier-button:hover {
+    background: #0056b3;
+}
+
+.multiplier-display {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    min-width: 60px;
+    text-align: center;
+}
+
+.portion-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 8px;
+}
+
+.reset-button {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.reset-button:hover {
+    background: #5a6268;
+}
+
+/* Individual Ingredients Settings */
+.ingredient-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e9ecef;
+}
+
+.ingredient-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.ingredient-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.ingredient-stats {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 2px;
+}
+
+.ingredient-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ingredient-multiplier-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ingredient-multiplier-btn:hover {
+    background: #0056b3;
+}
+
+.ingredient-multiplier-display {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333;
+    min-width: 40px;
+    text-align: center;
+}
+
+.remove-ingredient-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-left: 8px;
+}
+
+.remove-ingredient-btn:hover {
+    background: #c82333;
 }
 
 @media (max-width: 768px) {
