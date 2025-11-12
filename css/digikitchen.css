@@ -98,7 +98,7 @@ body {
 }
 
 .food-scroll-menu::-webkit-scrollbar {
-    display: none;
+    display: inside;
 }
 
 .food-scroll-item {
