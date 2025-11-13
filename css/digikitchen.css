@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #959595 0%, #1b1b1c 100%);
     min-height: 100vh;
     padding: 20px;
 }
@@ -127,6 +127,29 @@ body {
     border-radius: 25px;
     font-weight: bold;
     font-size: 1.1rem;
+}
+
+/* Food Category Legend */
+.category-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 15px 0;
+    padding: 12px;
+    background: rgba(248, 249, 250, 0.8);
+    border-radius: 8px;
+    justify-content: center;
+}
+
+.legend-item {
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    white-space: nowrap;
 }
 
 /* Horizontal Food Menu */

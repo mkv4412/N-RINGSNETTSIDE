@@ -31,6 +31,17 @@
                 </div>
             </div>
 
+            <!-- Food Category Legend -->
+            <div class="category-legend">
+                <div class="legend-item">🥩 Protein</div>
+                <div class="legend-item">🥛 Dairy</div>
+                <div class="legend-item">🧈 Fats</div>
+                <div class="legend-item">🌾 Grains</div>
+                <div class="legend-item">🥔 Carbs</div>
+                <div class="legend-item">🥬 Vegetables</div>
+                <div class="legend-item">🍎 Fruits</div>
+            </div>
+
             <!-- Horizontal Scrolling Food Menu -->
             <div class="food-menu-wrapper">
                 <button class="scroll-button scroll-left" id="scrollLeft">‹</button>
@@ -148,7 +159,8 @@
                 'dairy': '🥛',
                 'fat': '🧈',
                 'grain': '🌾',
-                'starch': '🥔',
+                'starch': '🥔',  // Keep starch for backwards compatibility
+                'carbs': '🥔',   // Add carbs as synonym
                 'vegetable': '🥬',
                 'fruit': '🍎'
             };
