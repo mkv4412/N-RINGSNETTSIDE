@@ -141,6 +141,56 @@
                     <p style="color: #666; font-style: italic;">Ingen ingredienser valgt ennå</p>
                 </div>
             </div>
+
+            <div style="margin-top: 18px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px;">
+                <h4>➕ Legg til Egendefinert Ingrediens</h4>
+                <p style="color:#666; margin-top: -6px; margin-bottom: 8px;">Lag en rask ingrediens som vises i scrolleren (midlertidig, lagres ikke ved oppdatering).</p>
+                <button class="add-ingredient-button" id="addIngredientBtn" style="padding:6px 10px; border-radius:8px; background:#f0f0f0; border:1px solid #ddd; cursor:pointer;">+ Legg til ingrediens</button>
+
+                <form id="addIngredientForm" style="display:none; margin-top:12px; gap:8px;">
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <label style="flex:1 1 200px; font-size:13px; color:#333;">Navn:<br><input name="name" required style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 160px; font-size:13px; color:#333;">Kategori:<br>
+                            <select name="category" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;">
+                                <option value="protein">Protein</option>
+                                <option value="dairy">Dairy</option>
+                                <option value="fat">Fat</option>
+                                <option value="grain">Grain</option>
+                                <option value="carbs">Carbs</option>
+                                <option value="vegetable">Vegetable</option>
+                                <option value="fruit">Fruit</option>
+                            </select>
+                        </label>
+                        <label style="flex:1 1 160px; font-size:13px; color:#333;">Portion (tekst):<br><input name="portion" placeholder="f.eks. 1 eple" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                    </div>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                        <label style="flex:1 1 100px; font-size:13px; color:#333;">Kcal:<br><input type="number" name="kcal" step="1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 100px; font-size:13px; color:#333;">Protein g:<br><input type="number" name="protein_g" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 100px; font-size:13px; color:#333;">Fat g:<br><input type="number" name="fat_g" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Fetttype:<br>
+                            <select name="fat_type" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;">
+                                <option value="healthy">Sunt</option>
+                                <option value="mixed">Blandet</option>
+                                <option value="unhealthy">Usunt</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                        <label style="flex:1 1 100px; font-size:13px; color:#333;">Carbs g:<br><input type="number" name="carbs_g" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Cholesterol mg:<br><input type="number" name="cholesterol_mg" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Collagen g:<br><input type="number" name="collagen_g" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Vitamin C mg:<br><input type="number" name="vitaminC_mg" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Calcium mg:<br><input type="number" name="calcium_mg" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                    </div>
+
+                    <div style="margin-top:10px; display:flex; gap:8px;">
+                        <button type="submit" style="padding:8px 10px; border-radius:8px;">Legg til</button>
+                        <button type="button" id="cancelAddIngredient" style="padding:8px 10px; border-radius:8px; background:#fff; border:1px solid #ddd;">Avbryt</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -475,6 +525,14 @@
                 updateIndividualPortions();
             });
 
+            // Add-ingredient UI wiring
+            const addIngredientBtn = document.getElementById('addIngredientBtn');
+            const addIngredientForm = document.getElementById('addIngredientForm');
+            const cancelAddIngredient = document.getElementById('cancelAddIngredient');
+            if (addIngredientBtn) addIngredientBtn.addEventListener('click', (e) => { e.preventDefault(); showAddIngredientForm(); });
+            if (cancelAddIngredient) cancelAddIngredient.addEventListener('click', (e) => { e.preventDefault(); hideAddIngredientForm(); });
+            if (addIngredientForm) addIngredientForm.addEventListener('submit', (e) => { e.preventDefault(); addCustomIngredient(); });
+
             // Initialize display
             updateMultiplierDisplay();
         }
@@ -482,6 +540,63 @@
         function updateMultiplierDisplay() {
             const multiplierDisplay = document.getElementById('multiplierDisplay');
             multiplierDisplay.textContent = `${portionMultiplier.toFixed(1)}x`;
+        }
+
+        // Add-ingredient helpers
+        function showAddIngredientForm() {
+            const f = document.getElementById('addIngredientForm');
+            if (f) f.style.display = 'block';
+        }
+
+        function hideAddIngredientForm() {
+            const f = document.getElementById('addIngredientForm');
+            if (f) {
+                f.style.display = 'none';
+                try { f.reset(); } catch(e) {}
+            }
+        }
+
+        function addCustomIngredient() {
+            const form = document.getElementById('addIngredientForm');
+            if (!form) return;
+            const formData = new FormData(form);
+            const name = (formData.get('name') || '').toString().trim();
+            if (!name) { alert('Vennligst skriv inn et navn for ingrediensen.'); return; }
+
+            const category = formData.get('category') || 'vegetable';
+            const portion = formData.get('portion') || '1 portion';
+            const kcal = Number(formData.get('kcal')) || 0;
+            const protein_g = Number(formData.get('protein_g')) || 0;
+            const fat_g = Number(formData.get('fat_g')) || 0;
+            const fat_type = formData.get('fat_type') || 'mixed';
+            const carbs_g = Number(formData.get('carbs_g')) || 0;
+            const cholesterol_mg = Number(formData.get('cholesterol_mg')) || 0;
+            const collagen_g = Number(formData.get('collagen_g')) || 0;
+            const vitaminC_mg = Number(formData.get('vitaminC_mg')) || 0;
+            const calcium_mg = Number(formData.get('calcium_mg')) || 0;
+
+            const newFood = {
+                name,
+                category,
+                portion,
+                kcal,
+                protein_g,
+                fat_g,
+                fat_type,
+                carbs_g,
+                cholesterol_mg,
+                collagen_g,
+                vitaminC_mg,
+                calcium_mg
+            };
+
+            // Add to foods array and refresh UI
+            foods.push(newFood);
+            // set default individual multiplier for this ingredient to current global portionMultiplier
+            individualMultipliers[name] = portionMultiplier;
+            displayFoodScrollMenu();
+            updateIndividualPortions();
+            hideAddIngredientForm();
         }
 
         function updateIndividualPortions() {
