@@ -313,13 +313,13 @@
             };
         }
 
-        // Function to update portion text
+        // Function to show updated context for portions
         function updatePortionText(originalPortion, multiplier) {
             if (multiplier === 1.0) return originalPortion;
             return `${originalPortion} (${multiplier}x)`;
         }
 
-        // Function to update pan contents
+        // Function to update whatevers in the pan 
         function updatePanContents() {
             const panContents = document.getElementById('panContents');
             panContents.innerHTML = '';
