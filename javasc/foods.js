@@ -23,5 +23,8 @@ const foods = [
   { name: "Cucumber", category: "vegetable", portion: "1 cucumber", kcal: 30, protein_g: 1.4, fat_g: 0.1, fat_type: "healthy", carbs_g: 6, cholesterol_mg: 0, collagen_g: 0, vitaminC_mg: 5, calcium_mg: 16 },
   { name: "Apple", category: "fruit", portion: "1 apple", kcal: 95, protein_g: 0.5, fat_g: 0.3, fat_type: "healthy", carbs_g: 25, cholesterol_mg: 0, collagen_g: 0, vitaminC_mg: 8, calcium_mg: 11 },
   { name: "Banana", category: "fruit", portion: "1 banana", kcal: 105, protein_g: 1.3, fat_g: 0.4, fat_type: "healthy", carbs_g: 27, cholesterol_mg: 0, collagen_g: 0, vitaminC_mg: 9, calcium_mg: 5 },
-  { name: "Cheese slice", category: "dairy", portion: "1 slice", kcal: 113, protein_g: 7, fat_g: 9.2, fat_type: "unhealthy", carbs_g: 0.4, cholesterol_mg: 29, collagen_g: 0, vitaminC_mg: 0, calcium_mg: 202 }
+  { name: "Cheese slice", category: "dairy", portion: "1 slice", kcal: 113, protein_g: 7, fat_g: 9.2, fat_type: "unhealthy", carbs_g: 0.4, cholesterol_mg: 29, collagen_g: 0, vitaminC_mg: 0, calcium_mg: 202 },
+  { name: "Mayonnaise", category: "fat", portion: "1 tbsp (14g)", kcal: 99, protein_g: 0.1, fat_g: 11, fat_type: "unhealthy", carbs_g: 0.1, cholesterol_mg: 7, collagen_g: 0, vitaminC_mg: 0, calcium_mg: 2 },
+  { name: "Ketchup", category: "vegetable", portion: "1 tbsp (17g)", kcal: 16, protein_g: 0.4, fat_g: 0.1, fat_type: "healthy", carbs_g: 4, cholesterol_mg: 0, collagen_g: 0, vitaminC_mg: 2, calcium_mg: 4 },
+  { name: "Frank's Hot Sauce", category: "vegetable", portion: "1 tsp (5ml)", kcal: 3, protein_g: 0.1, fat_g: 0, fat_type: "healthy", carbs_g: 0.5, cholesterol_mg: 0, collagen_g: 0, vitaminC_mg: 1, calcium_mg: 1 }
 ];
