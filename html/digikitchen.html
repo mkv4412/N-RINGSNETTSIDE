@@ -54,18 +54,18 @@
 
         <!-- Selected Items -->
         <div class="selected-items">
-            <h3>📋 Din Måltidsrapport</h3>
+            <h3>📋 Meal Report</h3>
             <div id="selectedItems">
-                <p style="color: #666; font-style: italic;">Ingen varer valgt ennå. Start å bygge måltidet ditt!</p>
+                <p style="color: #666; font-style: italic;">No items selected yet. Start building your meal!</p>
             </div>
             
             <!-- Nutrition Report -->
             <div id="nutritionReport" style="display: none;">
-                <h4 style="color: #333; margin-top: 20px; margin-bottom: 15px;">🍽️ Komplett Næringsrapport</h4>
+                <h4 style="color: #333; margin-top: 20px; margin-bottom: 15px;">🍽️ Complete Nutrition Report</h4>
                 <div class="nutrition-summary">
                     <div class="nutrition-grid">
                         <div class="nutrition-item">
-                            <span class="nutrition-label">Total Kalorier:</span>
+                            <span class="nutrition-label">Total Calories:</span>
                             <span class="nutrition-value" id="totalKcal">0 kcal</span>
                         </div>
                         <div class="nutrition-item">
@@ -73,19 +73,19 @@
                             <span class="nutrition-value" id="totalProtein">0 g</span>
                         </div>
                         <div class="nutrition-item">
-                            <span class="nutrition-label">Fett:</span>
+                            <span class="nutrition-label">Fat:</span>
                             <span class="nutrition-value" id="totalFat">0 g</span>
                         </div>
                         <div class="nutrition-item">
-                            <span class="nutrition-label">Karbohydrater:</span>
+                            <span class="nutrition-label">Carbohydrates:</span>
                             <span class="nutrition-value" id="totalCarbs">0 g</span>
                         </div>
                         <div class="nutrition-item">
-                            <span class="nutrition-label">Kolesterol:</span>
+                            <span class="nutrition-label">Cholesterol:</span>
                             <span class="nutrition-value" id="totalCholesterol">0 mg</span>
                         </div>
                         <div class="nutrition-item">
-                            <span class="nutrition-label">Kollagen:</span>
+                            <span class="nutrition-label">Collagen:</span>
                             <span class="nutrition-value" id="totalCollagen">0 g</span>
                         </div>
                         <div class="nutrition-item">
@@ -93,17 +93,17 @@
                             <span class="nutrition-value" id="totalVitaminC">0 mg</span>
                         </div>
                         <div class="nutrition-item">
-                            <span class="nutrition-label">Kalsium:</span>
+                            <span class="nutrition-label">Calcium:</span>
                             <span class="nutrition-value" id="totalCalcium">0 mg</span>
                         </div>
                     </div>
                     
                     <div class="fat-type-breakdown" style="margin-top: 15px;">
-                        <h5 style="color: #555; margin-bottom: 10px;">Fetttype Analyse:</h5>
+                        <h5 style="color: #555; margin-bottom: 10px;">Fat Type Analysis:</h5>
                         <div id="fatTypeBreakdown">
-                            <div class="fat-type healthy">Sunt fett: <span id="healthyFat">0 g</span></div>
-                            <div class="fat-type mixed">Blandet fett: <span id="mixedFat">0 g</span></div>
-                            <div class="fat-type unhealthy">Usunt fett: <span id="unhealthyFat">0 g</span></div>
+                            <div class="fat-type healthy">Healthy fat: <span id="healthyFat">0 g</span></div>
+                            <div class="fat-type mixed">Mixed fat: <span id="mixedFat">0 g</span></div>
+                            <div class="fat-type unhealthy">Unhealthy fat: <span id="unhealthyFat">0 g</span></div>
                         </div>
                     </div>
                 </div>
@@ -118,39 +118,39 @@
     <div class="settings-modal" id="settingsModal">
         <div class="settings-panel">
             <div class="settings-header">
-                <h3 class="settings-title">⚙️ Porsjonsinnstillinger</h3>
+                <h3 class="settings-title">⚙️ Portion Settings</h3>
                 <button class="close-settings" id="closeSettings">✕</button>
             </div>
             
             <div class="portion-multiplier">
-                <h4>📏 Globale Porsjoner</h4>
+                <h4>📏 Global Portions</h4>
                 <div class="multiplier-controls">
                     <button class="multiplier-button" id="decreaseMultiplier">-</button>
                     <span class="multiplier-display" id="multiplierDisplay">1.0x</span>
                     <button class="multiplier-button" id="increaseMultiplier">+</button>
                 </div>
                 <div class="portion-info">
-                    Standard multiplikator for nye ingredienser
+                    Default multiplier for new ingredients
                 </div>
-                <button class="reset-button" id="resetMultiplier">Tilbakestill alle</button>
+                <button class="reset-button" id="resetMultiplier">Reset all</button>
             </div>
 
             <div style="margin-top: 20px;">
-                <h4>🥘 Individuelle Ingredienser:</h4>
+                <h4>🥘 Individual Ingredients:</h4>
                 <div id="individualPortions">
-                    <p style="color: #666; font-style: italic;">Ingen ingredienser valgt ennå</p>
+                    <p style="color: #666; font-style: italic;">No ingredients selected yet</p>
                 </div>
             </div>
 
             <div style="margin-top: 18px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px;">
-                <h4>➕ Legg til Egendefinert Ingrediens</h4>
-                <p style="color:#666; margin-top: -6px; margin-bottom: 8px;">Lag en rask ingrediens som vises i scrolleren (midlertidig, lagres ikke ved oppdatering).</p>
-                <button class="add-ingredient-button" id="addIngredientBtn" style="padding:6px 10px; border-radius:8px; background:#f0f0f0; border:1px solid #ddd; cursor:pointer;">+ Legg til ingrediens</button>
+                <h4>➕ Add Custom Ingredient</h4>
+                <p style="color:#666; margin-top: -6px; margin-bottom: 8px;">Create a quick ingredient shown in the scroller (temporary, not saved on reload).</p>
+                <button class="add-ingredient-button" id="addIngredientBtn" style="padding:6px 10px; border-radius:8px; background:#f0f0f0; border:1px solid #ddd; cursor:pointer;">+ Add ingredient</button>
 
                 <form id="addIngredientForm" style="display:none; margin-top:12px; gap:8px;">
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <label style="flex:1 1 200px; font-size:13px; color:#333;">Navn:<br><input name="name" required style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
-                        <label style="flex:1 1 160px; font-size:13px; color:#333;">Kategori:<br>
+                        <label style="flex:1 1 200px; font-size:13px; color:#333;">Name:<br><input name="name" required style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 160px; font-size:13px; color:#333;">Category:<br>
                             <select name="category" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;">
                                 <option value="protein">Protein</option>
                                 <option value="dairy">Dairy</option>
@@ -161,18 +161,18 @@
                                 <option value="fruit">Fruit</option>
                             </select>
                         </label>
-                        <label style="flex:1 1 160px; font-size:13px; color:#333;">Portion (tekst):<br><input name="portion" placeholder="f.eks. 1 eple" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
+                        <label style="flex:1 1 160px; font-size:13px; color:#333;">Portion (text):<br><input name="portion" placeholder="e.g. 1 apple" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
                     </div>
 
                     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
                         <label style="flex:1 1 100px; font-size:13px; color:#333;">Kcal:<br><input type="number" name="kcal" step="1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
                         <label style="flex:1 1 100px; font-size:13px; color:#333;">Protein g:<br><input type="number" name="protein_g" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
                         <label style="flex:1 1 100px; font-size:13px; color:#333;">Fat g:<br><input type="number" name="fat_g" step="0.1" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;"></label>
-                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Fetttype:<br>
+                        <label style="flex:1 1 120px; font-size:13px; color:#333;">Fat type:<br>
                             <select name="fat_type" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ddd;">
-                                <option value="healthy">Sunt</option>
-                                <option value="mixed">Blandet</option>
-                                <option value="unhealthy">Usunt</option>
+                                <option value="healthy">Healthy</option>
+                                <option value="mixed">Mixed</option>
+                                <option value="unhealthy">Unhealthy</option>
                             </select>
                         </label>
                     </div>
@@ -186,8 +186,8 @@
                     </div>
 
                     <div style="margin-top:10px; display:flex; gap:8px;">
-                        <button type="submit" style="padding:8px 10px; border-radius:8px;">Legg til</button>
-                        <button type="button" id="cancelAddIngredient" style="padding:8px 10px; border-radius:8px; background:#fff; border:1px solid #ddd;">Avbryt</button>
+                        <button type="submit" style="padding:8px 10px; border-radius:8px;">Add</button>
+                        <button type="button" id="cancelAddIngredient" style="padding:8px 10px; border-radius:8px; background:#fff; border:1px solid #ddd;">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -378,7 +378,7 @@
             const nutritionReport = document.getElementById('nutritionReport');
             
             if (selectedFoods.length === 0) {
-                selectedItemsContainer.innerHTML = '<p style="color: #666; font-style: italic;">Ingen varer valgt ennå. Start å bygge måltidet ditt!</p>';
+                selectedItemsContainer.innerHTML = '<p style="color: #666; font-style: italic;">No items selected yet. Start building your meal!</p>';
                 nutritionReport.style.display = 'none';
                 return;
             }
@@ -390,7 +390,7 @@
                 item.className = 'selected-item';
                 item.innerHTML = `
                     <span>${getCategoryEmoji(food.category)} ${food.name} - ${food.kcal} kcal</span>
-                    <button class="remove-button" onclick="removeFood(${index})">Fjern</button>
+                    <button class="remove-button" onclick="removeFood(${index})">Remove</button>
                 `;
                 selectedItemsContainer.appendChild(item);
             });
@@ -561,7 +561,7 @@
             if (!form) return;
             const formData = new FormData(form);
             const name = (formData.get('name') || '').toString().trim();
-            if (!name) { alert('Vennligst skriv inn et navn for ingrediensen.'); return; }
+            if (!name) { alert('Please enter a name for the ingredient.'); return; }
 
             const category = formData.get('category') || 'vegetable';
             const portion = formData.get('portion') || '1 portion';
@@ -603,7 +603,7 @@
             const container = document.getElementById('individualPortions');
             
             if (Object.keys(individualMultipliers).length === 0) {
-                container.innerHTML = '<p style="color: #666; font-style: italic;">Ingen ingredienser valgt ennå</p>';
+                container.innerHTML = '<p style="color: #666; font-style: italic;">No ingredients selected yet</p>';
                 return;
             }
 
